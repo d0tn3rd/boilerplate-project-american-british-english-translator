@@ -55,8 +55,14 @@ class Translator {
     let result = americanEnglishString;
 
     const tokens = result.split(" ");
-    const caseMap = tokens.map((word) => isCapitalCaseWord(word));
+    const caseMap = tokens.reduce(function (accumulator, current) {
+      if (isCapitalCaseWord(current)) {
+        accumulator[current.toLowerCase()] = true;
+      }
+      return accumulator;
+    }, {});
     console.log("caseMap: ", caseMap);
+
     const tokensLowerCase = tokens.map((token) => token.toLowerCase());
 
     console.log("tokensLowerCase: ", tokensLowerCase);
@@ -116,33 +122,71 @@ class Translator {
     // now search word wise
     for (const americanWord of Object.keys(americanOnly)) {
       const tokenIndex = result.indexOf(americanWord);
+
       if (tokenIndex !== -1) {
-        console.log("found in american only");
-        translationNeeded = true;
-        result = result.replace(
-          americanWord,
-          "<span class='highlight'>" + americanOnly[americanWord] + "</span>",
-        );
+        const matchingWordPieces = americanWord.split(" ");
+
+        const tokensWithoutPunctuation = [...tokensLowerCase];
+        const tempLastToken = tokensLowerCase[tokensLowerCase.length - 1];
+
+        tokensWithoutPunctuation[tokensWithoutPunctuation.length - 1] =
+          tempLastToken.slice(0, -1);
+        // all matching word pieces should be in tokens lower case
+        const matchingWordPiecesAvailableInTargetString =
+          matchingWordPieces.reduce(function (acc, curr) {
+            acc = acc && tokensWithoutPunctuation.indexOf(curr) !== -1;
+            return acc;
+          }, true);
+        if (matchingWordPiecesAvailableInTargetString) {
+          translationNeeded = true;
+          result = result.replace(
+            americanWord,
+            "<span class='highlight'>" + americanOnly[americanWord] + "</span>",
+          );
+        }
       }
     }
 
     for (const americanWord of Object.keys(americanToBritishSpelling)) {
-      if (americanEnglishString.indexOf(americanWord) !== -1) {
-        translationNeeded = true;
-        result = result.replace(
-          americanWord,
-          "<span class='highlight'>" +
-            americanToBritishSpelling[americanWord] +
-            "</span>",
-        );
+      const tokenIndex = result.indexOf(americanWord);
+
+      if (tokenIndex !== -1) {
+        const matchingWordPieces = americanWord.split(" ");
+        const tokensWithoutPunctuation = [...tokensLowerCase];
+        const tempLastToken = tokensLowerCase[tokensLowerCase.length - 1];
+
+        tokensWithoutPunctuation[tokensWithoutPunctuation.length - 1] =
+          tempLastToken.slice(0, -1);
+        // all matching word pieces should be in tokens lower case
+        const matchingWordPiecesAvailableInTargetString =
+          matchingWordPieces.reduce(function (acc, curr) {
+            acc = acc && tokensWithoutPunctuation.indexOf(curr) !== -1;
+            return acc;
+          }, true);
+        if (matchingWordPiecesAvailableInTargetString) {
+          translationNeeded = true;
+          result = result.replace(
+            americanWord,
+            "<span class='highlight'>" +
+              americanToBritishSpelling[americanWord] +
+              "</span>",
+          );
+        }
       }
     }
     const finalTokens = result.split(" ");
+
     // restore the case
-    for (let i = 0; i < caseMap.length; i++) {
-      if (caseMap[i]) {
-        // this word was capital
-        finalTokens[i] = capitalizeWord(finalTokens[i]);
+    for (let i = 0; i < finalTokens.length; i++) {
+      const finalToken = finalTokens[i];
+
+      if (finalToken.indexOf("<span") !== -1) {
+        continue;
+      } else {
+        if (caseMap[finalToken]) {
+          finalTokens[i] = capitalizeWord(finalToken);
+          delete caseMap[finalToken];
+        }
       }
     }
 
@@ -194,7 +238,12 @@ class Translator {
     let translationNeeded = false;
 
     const tokens = result.split(" ");
-    const caseMap = tokens.map((word) => isCapitalCaseWord(word));
+    const caseMap = tokens.reduce(function (accumulator, current) {
+      if (isCapitalCaseWord(current)) {
+        accumulator[current.toLowerCase()] = true;
+      }
+      return accumulator;
+    }, {});
     console.log("caseMap: ", caseMap);
     const tokensLowerCase = tokens.map((token) => token.toLowerCase());
     console.log("tokens before replacing: ", tokensLowerCase);
@@ -231,7 +280,6 @@ class Translator {
     ) {
       const sentenceEndPunctuation = lastToken[lastToken.length - 1];
       const searchTerm = lastToken.slice(0, -1);
-      //WARNING:  maybe we need to search the dictionaries with uppercase things?
       if (britishToAmericanSpelling[searchTerm]) {
         translationNeeded = true;
         tokensLowerCase[tokensLowerCase.length - 1] =
@@ -256,24 +304,56 @@ class Translator {
 
     // search word wise
     for (const britishWord of Object.keys(britishOnly)) {
-      if (britishEnglishString.indexOf(britishWord) !== -1) {
+      const tokenIndex = result.indexOf(britishWord);
+
+      if (tokenIndex !== -1) {
         //  word was found
-        translationNeeded = true;
-        result = result.replace(
-          britishWord,
-          "<span class='highlight'>" + britishOnly[britishWord] + "</span>",
-        );
+
+        const matchingWordPieces = britishWord.split(" ");
+        const tokensWithoutPunctuation = [...tokensLowerCase];
+        const tempLastToken = tokensLowerCase[tokensLowerCase.length - 1];
+
+        tokensWithoutPunctuation[tokensWithoutPunctuation.length - 1] =
+          tempLastToken.slice(0, -1);
+        // all matching word pieces should be in tokens lower case
+        const matchingWordPiecesAvailableInTargetString =
+          matchingWordPieces.reduce(function (acc, curr) {
+            acc = acc && tokensWithoutPunctuation.indexOf(curr) !== -1;
+            return acc;
+          }, true);
+        if (matchingWordPiecesAvailableInTargetString) {
+          translationNeeded = true;
+          result = result.replace(
+            britishWord,
+            "<span class='highlight'>" + britishOnly[britishWord] + "</span>",
+          );
+        }
       }
     }
     for (const britishWord of Object.keys(britishToAmericanSpelling)) {
-      if (britishEnglishString.indexOf(britishWord) !== -1) {
-        translationNeeded = true;
-        result = result.replace(
-          britishWord,
-          "<span class='highlight'>" +
-            britishToAmericanSpelling[britishWord] +
-            "</span>",
-        );
+      const tokenIndex = result.indexOf(britishWord);
+      if (tokenIndex !== -1) {
+        const matchingWordPieces = britishWord.split(" ");
+        const tokensWithoutPunctuation = [...tokensLowerCase];
+        const tempLastToken = tokensLowerCase[tokensLowerCase.length - 1];
+
+        tokensWithoutPunctuation[tokensWithoutPunctuation.length - 1] =
+          tempLastToken.slice(0, -1);
+        // all matching word pieces should be in tokens lower case
+        const matchingWordPiecesAvailableInTargetString =
+          matchingWordPieces.reduce(function (acc, curr) {
+            acc = acc && tokensWithoutPunctuation.indexOf(curr) !== -1;
+            return acc;
+          }, true);
+        if (matchingWordPiecesAvailableInTargetString) {
+          translationNeeded = true;
+          result = result.replace(
+            britishWord,
+            "<span class='highlight'>" +
+              britishToAmericanSpelling[britishWord] +
+              "</span>",
+          );
+        }
       }
     }
 
@@ -281,10 +361,16 @@ class Translator {
 
     const finalTokens = result.split(" ");
     // restore the case
-    for (let i = 0; i < caseMap.length; i++) {
-      if (caseMap[i]) {
-        // this word was capital
-        finalTokens[i] = capitalizeWord(finalTokens[i]);
+    for (let i = 0; i < finalTokens.length; i++) {
+      const finalToken = finalTokens[i];
+
+      if (finalToken.indexOf("<span") !== -1) {
+        continue;
+      } else {
+        if (caseMap[finalToken]) {
+          finalTokens[i] = capitalizeWord(finalToken);
+          delete caseMap[finalToken];
+        }
       }
     }
 
