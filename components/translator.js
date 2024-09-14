@@ -95,19 +95,25 @@ class Translator {
     }
 
     // check the titles
+
+    const sentenceTokens = result.split(" ");
     for (const title of Object.keys(americanToBritishTitles)) {
-      if (result.indexOf(title) !== -1) {
+      const titleIndex = sentenceTokens.indexOf(title);
+      if (titleIndex !== -1) {
         translationNeeded = true;
-        result = result.replace(title, americanToBritishTitles[title]);
+        const britishTitle = americanToBritishTitles[title];
+        // update the sentencneTokens array
+        sentenceTokens[titleIndex] = britishTitle;
+        result = sentenceTokens.join(" ");
       }
     }
     for (const title of Object.keys(capitalizedAmericanToBritishTitles)) {
-      if (result.indexOf(title) !== -1) {
+      const titleIndex = sentenceTokens.indexOf(title);
+      if (titleIndex !== -1) {
         translationNeeded = true;
-        result = result.replace(
-          title,
-          capitalizedAmericanToBritishTitles[title],
-        );
+        const britishTitle = capitalizedAmericanToBritishTitles[title];
+        sentenceTokens[titleIndex] = britishTitle;
+        result = sentenceTokens.join(" ");
       }
     }
 
@@ -143,20 +149,25 @@ class Translator {
       result = result.replace(matches[0], matches[0].replace(".", ":"));
     }
 
+    const sentenceTokens = result.split(" ");
+
     for (const title of Object.keys(britishToAmericanTitles)) {
-      if (result.indexOf(title) !== -1) {
+      const titleIndex = sentenceTokens.indexOf(title);
+      const americanTitle = britishToAmericanSpelling[title];
+      if (titleIndex !== -1) {
         translationNeeded = true;
-        result = result.replace(title, britishToAmericanTitles[title]);
+        sentenceTokens[titleIndex] = americanTitle;
+        result = sentenceTokens.join(" ");
       }
     }
 
     for (const title of Object.keys(capitalizedBritishToAmericanTitles)) {
-      if (result.indexOf(title) !== -1) {
+      const titleIndex = sentenceTokens.indexOf(title);
+      const americanTitle = capitalizedBritishToAmericanTitles[title];
+      if (titleIndex !== -1) {
         translationNeeded = true;
-        result = result.replace(
-          title,
-          capitalizedBritishToAmericanTitles[title],
-        );
+        sentenceTokens[titleIndex] = americanTitle;
+        result = sentenceTokens.join(" ");
       }
     }
 
