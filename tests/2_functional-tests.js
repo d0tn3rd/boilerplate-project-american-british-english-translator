@@ -18,7 +18,9 @@ suite("Functional Tests", () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.text).to.equal("I ate yogurt for breakfast.");
-        expect(res.body.translation).to.equal("I ate yoghurt for breakfast.");
+        expect(res.body.translation).to.equal(
+          "I ate <span class='highlight'>yoghurt</span> for breakfast.",
+        );
         done();
       });
   });
