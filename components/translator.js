@@ -18,21 +18,6 @@ const britishToAmericanTitles = Object.keys(americanToBritishTitles).reduce(
   },
   {},
 );
-const commonWords = [
-  "to",
-  "a",
-  "with",
-  "on",
-  "for",
-  "this",
-  "then",
-  "or",
-  "the",
-  "in",
-  "are",
-  "my",
-  "I",
-];
 
 const capitalizeWord = function (word) {
   let firstLetter = word[0];
@@ -69,8 +54,59 @@ class Translator {
     let translationNeeded = false;
     let result = americanEnglishString;
 
+    const tokens = result.split(" ");
+    const caseMap = tokens.map((word) => isCapitalCaseWord(word));
+    console.log("caseMap: ", caseMap);
+    const tokensLowerCase = tokens.map((token) => token.toLowerCase());
+
+    console.log("tokensLowerCase: ", tokensLowerCase);
+
+    // replace the tokens separately
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      if (
+        americanToBritishSpelling[token] ||
+        americanToBritishSpelling[capitalizeWord(token)]
+      ) {
+        translationNeeded = true;
+        tokensLowerCase[i] = americanToBritishSpelling[token];
+      }
+      if (americanOnly[token] || americanOnly[capitalizeWord(token)]) {
+        translationNeeded = true;
+        tokensLowerCase[i] = americanOnly[token]; // conveniently these are
+      }
+    }
+    // check last token explicitly
+    // sentence can never end with Title so
+    const lastToken = tokensLowerCase[tokens.length - 1];
+    console.log("lastToken: ", lastToken);
+    if (
+      lastToken[lastToken.length - 1] === "." ||
+      lastToken[lastToken.length - 1] === "?"
+    ) {
+      const sentenceEndPunctuation = lastToken[lastToken.length - 1];
+      const searchTerm = lastToken.slice(0, -1);
+      if (americanToBritishSpelling[searchTerm]) {
+        translationNeeded = true;
+        tokensLowerCase[tokensLowerCase.length - 1] =
+          americanToBritishSpelling[searchTerm] + sentenceEndPunctuation;
+      }
+      if (americanOnly[searchTerm]) {
+        translationNeeded = true;
+        tokensLowerCase[tokensLowerCase.length - 1] =
+          americanOnly[searchTerm] + sentenceEndPunctuation;
+      }
+    }
+
+    console.log("tokensLowerCase: ", tokensLowerCase);
+
+    result = tokensLowerCase.join(" ");
+
+    // now search word wise
     for (const americanWord of Object.keys(americanOnly)) {
-      if (americanEnglishString.indexOf(americanWord) !== -1) {
+      const tokenIndex = result.indexOf(americanWord);
+      if (tokenIndex !== -1) {
+        console.log("found in american only");
         translationNeeded = true;
         result = result.replace(americanWord, americanOnly[americanWord]);
       }
@@ -85,7 +121,18 @@ class Translator {
         );
       }
     }
+    const finalTokens = result.split(" ");
+    // restore the case
+    for (let i = 0; i < caseMap.length; i++) {
+      if (caseMap[i]) {
+        // this word was capital
+        finalTokens[i] = capitalizeWord(finalTokens[i]);
+      }
+    }
 
+    result = finalTokens.join(" ");
+
+    // handle the time strings
     const regex = /\d+\:\d{2}/;
     const matches = result.match(regex);
 
