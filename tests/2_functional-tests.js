@@ -6,8 +6,6 @@ const server = require("../server.js");
 
 chai.use(chaiHttp);
 
-let Translator = require("../components/translator.js");
-
 suite("Functional Tests", () => {
   test("Translation with text and locale field", (done) => {
     chai
@@ -19,10 +17,8 @@ suite("Functional Tests", () => {
       })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-
-        // assert.typeOf(res.body, "object");
-        // assert(res.body.text === "I ate yogurt for breakfast.");
-        // assert(res.body.translation === "I ate yoghurt for breakfast.");
+        expect(res.body.text).to.equal("I ate yogurt for breakfast.");
+        expect(res.body.translation).to.equal("I ate yoghurt for breakfast.");
         done();
       });
   });
@@ -33,11 +29,10 @@ suite("Functional Tests", () => {
       .post("/api/translate")
       .send({ text: "I ate yogurt for breakfast", locale: "bad-locale-field" })
       .end((err, res) => {
-        // assert(res.statusCode === 400);
         expect(res.status).to.equal(400);
-        // assert.typeOf(res.body, "object");
-        // assert(res.body.error === "Invalid value for locale field");
-        // assert(Object.keys(res.body).length === 1);
+        expect(res.body).to.be.a("object");
+        expect(res.body.error).to.equal("Invalid value for locale field");
+        assert(Object.keys(res.body).length === 1);
         done();
       });
   });
@@ -48,11 +43,10 @@ suite("Functional Tests", () => {
       .post("/api/translate")
       .send({ locale: "american-to-british" })
       .end((err, res) => {
-        // assert(res.statusCode === 400);
         expect(res.status).to.equal(400);
-        // assert.typeOf(res.body, "object");
-        // assert(res.body.error === "Required field(s) missing");
-        // assert(Object.keys(res.body).length === 1);
+        expect(res.body).to.be.a("object");
+        expect(res.body.error).to.equal("Required field(s) missing");
+        assert(Object.keys(res.body).length === 1);
         done();
       });
   });
@@ -64,10 +58,9 @@ suite("Functional Tests", () => {
       .send({ text: "I ate yogurt for breakfast." })
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        // assert(res.statusCode === 400);
-        // assert.typeOf(res.body, "object");
-        // assert(res.body.error === "Required field(s) missing");
-        // assert(Object.keys(res.body).length == 1); // just the error key
+        expect(res.body).to.be.a("object");
+        expect(res.body.error).to.equal("Required field(s) missing");
+        assert(Object.keys(res.body).length == 1); // just the error key
         done();
       });
   });
@@ -81,11 +74,10 @@ suite("Functional Tests", () => {
         locale: "american-to-british",
       })
       .end((err, res) => {
-        // assert(res.statusCode === 400);
         expect(res.status).to.equal(400);
-        // assert.typeOf(res.body, "object");
-        // assert(res.body.error === "No text to translate");
-        // assert(Object.keys(res.body).length == 1); // just the error key
+        expect(res.body).to.be.a("object");
+        expect(res.body.error).to.equal("No text to translate");
+        assert(Object.keys(res.body).length == 1); // just the error key
         done();
       });
   });
@@ -100,10 +92,9 @@ suite("Functional Tests", () => {
       })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        // assert(res.statusCode === 200);
-        // assert.typeOf(res.body, "object");
-        // assert(res.body.text === text);
-        // assert(res.body.translation === "Everything looks good to me!");
+        expect(res.body).to.be.a("object");
+        assert(res.body.text === text);
+        assert(res.body.translation === "Everything looks good to me!");
         done();
       });
   });
