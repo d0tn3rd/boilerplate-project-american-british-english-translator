@@ -18,7 +18,10 @@ module.exports = function (app) {
     if (text === "")
       return res.status(400).send({ error: "No text to translate" });
 
-    permittedLocaleValues = ["american-to-british", "british-to-american"];
+    const permittedLocaleValues = [
+      "american-to-british",
+      "british-to-american",
+    ];
 
     if (permittedLocaleValues.indexOf(locale) === -1)
       return res.status(400).send({ error: "Invalid value for locale field" });
