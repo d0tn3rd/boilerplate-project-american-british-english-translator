@@ -93,7 +93,7 @@ suite("Functional Tests", () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.a("object");
-        assert(res.body.text === text);
+        assert(res.body.text === "I ate you for breakfast.");
         assert(res.body.translation === "Everything looks good to me!");
         done();
       });
