@@ -61,11 +61,8 @@ class Translator {
       }
       return accumulator;
     }, {});
-    console.log("caseMap: ", caseMap);
 
     const tokensLowerCase = tokens.map((token) => token.toLowerCase());
-
-    console.log("tokensLowerCase: ", tokensLowerCase);
 
     // replace the tokens separately
     for (let i = 0; i < tokens.length; i++) {
@@ -90,7 +87,6 @@ class Translator {
     // check last token explicitly
     // sentence can never end with Title so
     const lastToken = tokensLowerCase[tokens.length - 1];
-    console.log("lastToken: ", lastToken);
     if (
       lastToken[lastToken.length - 1] === "." ||
       lastToken[lastToken.length - 1] === "?"
@@ -114,8 +110,6 @@ class Translator {
           sentenceEndPunctuation;
       }
     }
-
-    console.log("tokensLowerCase: ", tokensLowerCase);
 
     result = tokensLowerCase.join(" ");
 
@@ -244,15 +238,12 @@ class Translator {
       }
       return accumulator;
     }, {});
-    console.log("caseMap: ", caseMap);
     const tokensLowerCase = tokens.map((token) => token.toLowerCase());
-    console.log("tokens before replacing: ", tokensLowerCase);
 
     // replace the tokens separately
     for (let i = 0; i < tokensLowerCase.length; i++) {
       const token = tokensLowerCase[i];
 
-      console.log(`checking token ${token} in both dictionaries`);
       if (
         britishToAmericanSpelling[token] ||
         britishToAmericanSpelling[capitalizeWord(token)]
@@ -273,7 +264,6 @@ class Translator {
     // check last token explicitly
     // sentence can never end with Title so
     const lastToken = tokensLowerCase[tokens.length - 1];
-    console.log("lastToken: ", lastToken);
     if (
       lastToken[lastToken.length - 1] === "." ||
       lastToken[lastToken.length - 1] === "?"
@@ -297,8 +287,6 @@ class Translator {
           sentenceEndPunctuation;
       }
     }
-
-    console.log("tokensLowerCase: ", tokensLowerCase);
 
     result = tokensLowerCase.join(" ");
 
