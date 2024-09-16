@@ -1,7 +1,6 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const assert = chai.assert;
-const expect = chai.expect;
 const server = require("../server.js");
 
 chai.use(chaiHttp);
@@ -16,9 +15,10 @@ suite("Functional Tests", () => {
         locale: "american-to-british",
       })
       .end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res.body.text).to.equal("I ate yogurt for breakfast.");
-        expect(res.body.translation).to.equal(
+        assert.equal(res.status, 200);
+        assert.equal(res.body.text, "I ate yogurt for breakfast.");
+        assert.equal(
+          res.body.translation,
           "I ate <span class='highlight'>yoghurt</span> for breakfast.",
         );
         done();
@@ -31,9 +31,9 @@ suite("Functional Tests", () => {
       .post("/api/translate")
       .send({ text: "I ate yogurt for breakfast", locale: "bad-locale-field" })
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body).to.be.a("object");
-        expect(res.body.error).to.equal("Invalid value for locale field");
+        assert.equal(res.status, 400);
+        assert.typeOf(res.body, "object");
+        assert.equal(res.body.error, "Invalid value for locale field");
         assert(Object.keys(res.body).length === 1);
         done();
       });
@@ -45,9 +45,9 @@ suite("Functional Tests", () => {
       .post("/api/translate")
       .send({ locale: "american-to-british" })
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body).to.be.a("object");
-        expect(res.body.error).to.equal("Required field(s) missing");
+        assert.equal(res.status, 400);
+        assert.typeOf(res.body, "object");
+        assert(res.body.error, "Required field(s) missing");
         assert(Object.keys(res.body).length === 1);
         done();
       });
@@ -59,9 +59,10 @@ suite("Functional Tests", () => {
       .post("/api/translate")
       .send({ text: "I ate yogurt for breakfast." })
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body).to.be.a("object");
-        expect(res.body.error).to.equal("Required field(s) missing");
+        assert.equal(res.status, 400);
+        assert.typeOf(res.body, "object");
+
+        assert.equal(res.body.error, "Required field(s) missing");
         assert(Object.keys(res.body).length == 1); // just the error key
         done();
       });
@@ -76,9 +77,9 @@ suite("Functional Tests", () => {
         locale: "american-to-british",
       })
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body).to.be.a("object");
-        expect(res.body.error).to.equal("No text to translate");
+        assert.equal(res.status, 400);
+        assert.typeOf(res.body, "object");
+        assert.equal(res.body.error, "No text to translate");
         assert(Object.keys(res.body).length == 1); // just the error key
         done();
       });
@@ -93,8 +94,8 @@ suite("Functional Tests", () => {
         locale: "american-to-british",
       })
       .end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res.body).to.be.a("object");
+        assert.equal(res.status, 200);
+        assert.typeOf(res.body, "object");
         assert(res.body.text === "I ate you for breakfast.");
         assert(res.body.translation === "Everything looks good to me!");
         done();
