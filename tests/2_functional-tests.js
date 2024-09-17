@@ -6,6 +6,7 @@ const server = require("../server.js");
 chai.use(chaiHttp);
 
 suite("Functional Tests", () => {
+  suite("second suite", () => {});
   test("Translation with text and locale field", (done) => {
     chai
       .request(server)
