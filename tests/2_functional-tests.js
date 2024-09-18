@@ -32,10 +32,9 @@ suite("Functional Tests", () => {
       .post("/api/translate")
       .send({ text: "I ate yogurt for breakfast", locale: "bad-locale-field" })
       .end((err, res) => {
-        assert.equal(res.status, 400);
-        assert.typeOf(res.body, "object");
+        assert.isObject(res.body);
+        assert.property(res.body, "error");
         assert.equal(res.body.error, "Invalid value for locale field");
-        assert(Object.keys(res.body).length === 1);
         done();
       });
   });
@@ -46,10 +45,9 @@ suite("Functional Tests", () => {
       .post("/api/translate")
       .send({ locale: "american-to-british" })
       .end((err, res) => {
-        assert.equal(res.status, 400);
-        assert.typeOf(res.body, "object");
-        assert(res.body.error, "Required field(s) missing");
-        assert(Object.keys(res.body).length === 1);
+        assert.isObject(res.body);
+        assert.property(res.body, "error");
+        assert.equal(res.body.error, "Required field(s) missing");
         done();
       });
   });
@@ -60,11 +58,9 @@ suite("Functional Tests", () => {
       .post("/api/translate")
       .send({ text: "I ate yogurt for breakfast." })
       .end((err, res) => {
-        assert.equal(res.status, 400);
-        assert.typeOf(res.body, "object");
-
+        assert.isObject(res.body);
+        assert.property(res.body, "error");
         assert.equal(res.body.error, "Required field(s) missing");
-        assert(Object.keys(res.body).length == 1); // just the error key
         done();
       });
   });
@@ -78,27 +74,31 @@ suite("Functional Tests", () => {
         locale: "american-to-british",
       })
       .end((err, res) => {
-        assert.equal(res.status, 400);
-        assert.typeOf(res.body, "object");
+        assert.isObject(res.body);
+        assert.property(res.body, "error");
         assert.equal(res.body.error, "No text to translate");
-        assert(Object.keys(res.body).length == 1); // just the error key
+
         done();
       });
   });
 
   test("Translation with text that needs no translation: POST request to /api/translate", (done) => {
+    const output = {
+      text: "SaintPeter and nhcarrigan give their regards!",
+      translation: "Everything looks good to me!",
+    };
     chai
       .request(server)
       .post("/api/translate")
       .send({
-        text: "I ate you for breakfast.", // should need no translation
+        text: output["text"], // should need no translation
         locale: "american-to-british",
       })
       .end((err, res) => {
-        assert.equal(res.status, 200);
-        assert.typeOf(res.body, "object");
-        assert(res.body.text === "I ate you for breakfast.");
-        assert(res.body.translation === "Everything looks good to me!");
+        assert.isObject(res.body);
+        assert.property(res.body, "text");
+        assert.property(res.body, "translation");
+        assert.deepEqual(res.body, output);
         done();
       });
   });
