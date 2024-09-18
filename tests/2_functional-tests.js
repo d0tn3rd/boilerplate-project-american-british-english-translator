@@ -20,7 +20,7 @@ suite("Functional Tests", () => {
         assert.equal(res.body.text, "I ate yogurt for breakfast.");
         assert.equal(
           res.body.translation,
-          "I ate <span class='highlight'>yoghurt</span> for breakfast.",
+          'I ate <span class="highlight">yoghurt</span> for breakfast.',
         );
         done();
       });
