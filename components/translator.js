@@ -73,14 +73,14 @@ class Translator {
       ) {
         translationNeeded = true;
         tokensLowerCase[i] =
-          "<span class='highlight'>" +
+          '<span class="highlight">' +
           americanToBritishSpelling[token] +
           "</span>";
       }
       if (americanOnly[token] || americanOnly[capitalizeWord(token)]) {
         translationNeeded = true;
         tokensLowerCase[i] =
-          "<span class='highlight'>" + americanOnly[token] + "</span>";
+          '<span class="highlight">' + americanOnly[token] + "</span>";
       }
     }
 
@@ -96,7 +96,7 @@ class Translator {
       if (americanToBritishSpelling[searchTerm]) {
         translationNeeded = true;
         tokensLowerCase[tokensLowerCase.length - 1] =
-          "<span class='highlight'>" +
+          '<span class="highlight">' +
           americanToBritishSpelling[searchTerm] +
           "</span>" +
           sentenceEndPunctuation;
@@ -104,7 +104,7 @@ class Translator {
       if (americanOnly[searchTerm]) {
         translationNeeded = true;
         tokensLowerCase[tokensLowerCase.length - 1] =
-          "<span class='highlight'>" +
+          '<span class="highlight">' +
           americanOnly[searchTerm] +
           "</span>" +
           sentenceEndPunctuation;
@@ -135,7 +135,7 @@ class Translator {
           translationNeeded = true;
           result = result.replace(
             americanWord,
-            "<span class='highlight'>" + americanOnly[americanWord] + "</span>",
+            '<span class="highlight">' + americanOnly[americanWord] + "</span>",
           );
         }
       }
@@ -161,7 +161,7 @@ class Translator {
           translationNeeded = true;
           result = result.replace(
             americanWord,
-            "<span class='highlight'>" +
+            '<span class="highlight">' +
               americanToBritishSpelling[americanWord] +
               "</span>",
           );
@@ -194,7 +194,7 @@ class Translator {
       translationNeeded = true;
       result = result.replace(
         matches[0],
-        "<span class='highlight'>" + matches[0].replace(":", ".") + "</span>",
+        '<span class="highlight">' + matches[0].replace(":", ".") + "</span>",
       );
     }
 
@@ -208,7 +208,7 @@ class Translator {
         const britishTitle = americanToBritishTitles[title];
         // update the sentencneTokens array
         sentenceTokens[titleIndex] =
-          "<span class='highlight'>" + britishTitle + "</span>";
+          '<span class="highlight">' + britishTitle + "</span>";
         result = sentenceTokens.join(" ");
       }
     }
@@ -218,7 +218,7 @@ class Translator {
         translationNeeded = true;
         const britishTitle = capitalizedAmericanToBritishTitles[title];
         sentenceTokens[titleIndex] =
-          "<span class='highlight'>" + britishTitle + "</span>";
+          '<span class="highlight">' + britishTitle + "</span>";
         result = sentenceTokens.join(" ");
       }
     }
@@ -250,14 +250,14 @@ class Translator {
       ) {
         translationNeeded = true;
         tokensLowerCase[i] =
-          "<span class='highlight'>" +
+          '<span class="highlight">' +
           britishToAmericanSpelling[token] +
           "</span>";
       }
       if (britishOnly[token] || britishOnly[capitalizeWord(token)]) {
         translationNeeded = true;
         tokensLowerCase[i] =
-          "<span class='highlight'>" + britishOnly[token] + "</span>";
+          '<span class="highlight">' + britishOnly[token] + "</span>";
       }
     }
 
@@ -273,7 +273,7 @@ class Translator {
       if (britishToAmericanSpelling[searchTerm]) {
         translationNeeded = true;
         tokensLowerCase[tokensLowerCase.length - 1] =
-          "<span class='highlight'>" +
+          '<span class="highlight">' +
           britishToAmericanSpelling[searchTerm] +
           "</span>" +
           sentenceEndPunctuation;
@@ -281,7 +281,7 @@ class Translator {
       if (britishOnly[searchTerm]) {
         translationNeeded = true;
         tokensLowerCase[tokensLowerCase.length - 1] =
-          "<span class='highlight'>" +
+          '<span class="highlight">' +
           britishOnly[searchTerm] +
           "</span>" +
           sentenceEndPunctuation;
@@ -313,7 +313,7 @@ class Translator {
           translationNeeded = true;
           result = result.replace(
             britishWord,
-            "<span class='highlight'>" + britishOnly[britishWord] + "</span>",
+            '<span class="highlight">' + britishOnly[britishWord] + "</span>",
           );
         }
       }
@@ -337,7 +337,7 @@ class Translator {
           translationNeeded = true;
           result = result.replace(
             britishWord,
-            "<span class='highlight'>" +
+            '<span class="highlight">' +
               britishToAmericanSpelling[britishWord] +
               "</span>",
           );
@@ -371,7 +371,7 @@ class Translator {
       translationNeeded = true;
       result = result.replace(
         matches[0],
-        "<span class='highlight'>" + matches[0].replace(".", ":") + "</span>",
+        '<span class="highlight">' + matches[0].replace(".", ":") + "</span>",
       );
     }
 
@@ -383,7 +383,7 @@ class Translator {
       if (titleIndex !== -1) {
         translationNeeded = true;
         sentenceTokens[titleIndex] =
-          "<span class='highlight'>" + americanTitle + "</span>";
+          '<span class="highlight">' + americanTitle + "</span>";
         result = sentenceTokens.join(" ");
       }
     }
@@ -394,7 +394,7 @@ class Translator {
       if (titleIndex !== -1) {
         translationNeeded = true;
         sentenceTokens[titleIndex] =
-          "<span class='highlight'>" + americanTitle + "</span>";
+          '<span class="highlight">' + americanTitle + "</span>";
         result = sentenceTokens.join(" ");
       }
     }
